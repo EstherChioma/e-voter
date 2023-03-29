@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{dash_fragment :: dash-head}" />
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav th:replace="~{dash_fragment :: dash-sidebar-nav}"></nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav th:replace="~{dash_fragment :: dash-top-nav}"></nav>
+                <div class="container-fluid" style="min-height: 620px">
+                    <h3 class="text-dark mb-4">Create Candidate</h3>
+                    <div class="row gutters-sm">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form>
+                                        <div class="form-group">
+                                             <label for="nameInput">Full Name</label>
+                                             <input type="text" class="form-control" id="nameInput" name="name" required>
+                                        </div>
+                                        <div class="form-group">
+                                             <label for="genderInput">Gender</label>
+                                             <select id="genderInput" class="form-control" name="gender">
+                                                  <option value="male">Male</option>
+                                                  <option value="female">Female</option>
+                                             </select>
+                                        </div>
+                                        <div class="form-group">
+                                             <label for="ageInput">Age</label>
+                                             <input type="number" class="form-control" id="ageInput" name="age" required>
+                                        </div>
+                                        <div class="form-group">
+                                             <label for="partyInput">Party</label>
+                                             <select id="partyInput" class="form-control" name="party">
+                                                  <option th:each="party: ${parties}" th:value="${party.id}">
+                                                      <span th:text="${party.acronym}"></span>
+                                                  </option>
+                                             </select>
+                                        </div>
+                                        <div class="form-group">
+                                             <label for="pollInput">Poll Type</label>
+                                             <select id="pollInput" class="form-control" name="poll">
+                                                 <option th:each="pollType : ${pollTypes}" th:value="${pollType.id}">
+                                                     <span th:text="${pollType.name}">Presidential Election</span>
+                                                 </option>
+                                             </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                             Submit
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+                <div id="myModal" class="modal fade">
+                    <div class="modal-dialog modal-confirm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="icon-box">
+                                    <i class="material-icons"></i>
+                                </div>
+                                <h4 class="modal-title w-100">Cool!</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-center">Created Successfully</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Failure Modal HTML -->
+                <div id="myFailModal" class="modal fade">
+                    <div class="modal-dialog modal-confirm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="icon-box-failure">
+                                    <i class="material-icons"></i>
+                                </div>
+                                <h4 class="modal-title w-100">Oops!!!</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-center">An error occurred.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-failure btn-danger btn-block" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © E-Voter 2023</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+</div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let form = $('form');
+
+            form.on('submit', function (e) {
+                e.preventDefault();
+                let formData = $(this).serializeArray();
+                console.log(formData);
+                let data = {
+                    "name": formData[0].value,
+                    "gender": formData[1].value,
+                    "age": formData[2].value,
+                    "partyId": formData[3].value,
+                    "pollTypeId": formData[4].value,
+                };
+                console.log(data);
+
+                $.ajax({
+                    contentType: "application/json",
+                    type: 'POST',
+                    url: '/candidates/save',
+                    data: JSON.stringify(data),
+                    statusCode: {
+                        201: function() {
+                            $('#myModal').modal('show');
+                            $('form')[0].reset();
+                        },
+                        400: function() {
+                            $('#myFailModal').modal('show');
+                        },
+                        500: function() {
+                            $('#myFailModal').modal('show');
+                        },
+                        405: function() {
+                            $('#myFailModal').modal('show');
+                        }
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

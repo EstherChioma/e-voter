@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{dash_fragment :: dash-head}" />
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav th:replace="~{dash_fragment :: dash-sidebar-nav}"></nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav th:replace="~{dash_fragment :: dash-top-nav}"></nav>
+                <div class="container-fluid" style="min-height: 620px">
+                    <h3 class="text-dark mb-4">Create Poll Type</h3>
+                    <div class="row gutters-sm">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-body">
+                                   <form>
+                                        <div class="form-group">
+                                             <label for="pollTypeInput">Poll Type</label>
+                                             <input type="text" class="form-control" id="pollTypeInput" name="poll_type">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                             Submit
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+                <!-- Success Modal-->
+                <div id="myModal" class="modal fade">
+                    <div class="modal-dialog modal-confirm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="icon-box">
+                                    <i class="material-icons"></i>
+                                </div>
+                                <h4 class="modal-title w-100">Cool!</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-center">Created Successfully</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Failure Modal HTML -->
+                <div id="myFailModal" class="modal fade">
+                    <div class="modal-dialog modal-confirm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="icon-box-failure">
+                                    <i class="material-icons"></i>
+                                </div>
+                                <h4 class="modal-title w-100">Oops!!!</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-center">An error occurred.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-failure btn-danger btn-block" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © E-Voter 2023</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+</div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let pollTypeInput = document.getElementById("pollTypeInput");
+
+            let form = $('form');
+
+            form.on('submit', function (e) {
+                e.preventDefault();
+                let formData = $(this).serializeArray();
+                console.log(formData);
+                let data = {
+                    "name": formData[0].value
+                };
+                console.log(data);
+
+                $.ajax({
+                    contentType: "application/json",
+                    type: 'POST',
+                    url: '/poll-types/save',
+                    data: JSON.stringify(data),
+                    statusCode: {
+                        201: function() {
+                            $('#myModal').modal('show');
+                            $('form')[0].reset();
+                        },
+                        400: function() {
+                            $('#myFailModal').modal('show');
+                        },
+                        500: function() {
+                            $('#myFailModal').modal('show');
+                        },
+                        405: function() {
+                            $('#myFailModal').modal('show');
+                        }
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

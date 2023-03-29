@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="outer_head">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>[[${pageTitle}]]</title>
+  <meta name="description" content="A secured web based election management system">
+  <link rel="stylesheet" th:href="@{/assets/bootstrap/css/bootstrap.min.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" th:href="@{/assets/fonts/fontawesome5-overrides.min.css}">
+  <link rel="stylesheet" th:href="@{/assets/css/Navigation-with-Button.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" th:href="@{/assets/css/alert-modal.css}">
+  <link rel="stylesheet" th:href="@{assets/css/password-reset-modal.css}">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+  <script th:src="@{/assets/js/bs-init.js}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script th:src="@{/assets/js/theme.js}"></script>
+</head>
+<body>
+<nav th:fragment="landing_nav" class="navbar navbar-light navbar-expand-md navigation-clean-button" style="background: transparent;">
+  <div class="container"><a class="navbar-brand" th:href="@{/}" style="color: var(--info);">E-Voter</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navcol-1">
+      <ul class="navbar-nav mr-auto"></ul><span class="navbar-text actions"> <a class="login" th:href="@{login}">Log In</a><a class="btn btn-light action-button" role="button" th:href="@{register}">Register</a></span>
+    </div>
+  </div>
+</nav>
+
+<nav th:fragment="outer_nav" class="navbar navbar-light navbar-expand-md navigation-clean-button" style="background: transparent;">
+  <div class="container"><a class="navbar-brand text-white" th:href="@{/}" style="color: var(--info);">E-Voter</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navcol-1">
+      <ul class="navbar-nav mr-auto"></ul><span class="navbar-text actions"> <a class="login" th:href="@{login}">Log In</a><a class="btn btn-light action-button" role="button" th:href="@{register}">Register</a></span>
+    </div>
+  </div>
+</nav>
+$END$
+</body>
+</html>

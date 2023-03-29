@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="dash-head">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>[[${pageTitle}]]</title>
+  <meta name="description" content="A secured web based election management system">
+  <link rel="stylesheet" th:href="@{/assets/bootstrap/css/bootstrap.min.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" th:href="@{/assets/fonts/fontawesome5-overrides.min.css}">
+  <link rel="stylesheet" th:href="@{/assets/css/Navigation-with-Button.css}">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+  <script th:src="@{/assets/js/bs-init.js}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script th:src="@{/assets/js/theme.js}"></script>
+</head>
+<body>
+<nav th:fragment="dash-sidebar-nav" class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: var(--info);">
+  <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" th:href="@{/}">
+    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
+    <div class="sidebar-brand-text mx-3"><span>E-Voter</span></div>
+  </a>
+    <hr class="sidebar-divider my-0">
+    <ul class="navbar-nav text-light" id="accordionSidebar">
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/dashboard/} + ${authUser.id}">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/dashboard/profile/} + ${authUser.id}">
+          <i class="fas fa-user"></i>
+          <span>Profile</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/dashboard/polls/} + ${authUser.id}">
+          <i class="fas fa-user"></i>
+          <span>Polls</span>
+        </a>
+      </li>
+      <li class="nav-item" th:if="${isAdmin}">
+        <a class="nav-link" th:href="@{/dashboard/add-candidate/} + ${authUser.id}">
+          <i class="far fa-user-circle"></i>
+          <span>Create Candidate</span>
+        </a>
+      </li>
+      <li class="nav-item" th:if="${isAdmin}">
+        <a class="nav-link" th:href="@{/dashboard/add-party/} + ${authUser.id}">
+          <i class="fas fa-user-circle"></i>
+          <span>Create Party</span>
+        </a>
+      </li>
+      <li class="nav-item" th:if="${isAdmin}">
+        <a class="nav-link" th:href="@{/dashboard/add-poll-type/} + ${authUser.id}">
+          <i class="far fa-user-circle"></i>
+          <span>Create Poll type</span>
+        </a>
+      </li>
+      <li class="nav-item" th:if="${isAdmin}">
+        <a class="nav-link" th:href="@{/dashboard/add-poll/} + ${authUser.id}">
+          <i class="far fa-user-circle"></i>
+          <span>Create Poll</span>
+        </a>
+      </li>
+      <li class="nav-item" th:if="${isAdmin}">
+        <a class="nav-link" th:href="@{/dashboard/add-admin/} + ${authUser.id}">
+          <i class="fas fa-user-circle"></i>
+          <span>Add Admin</span>
+        </a>
+      </li>
+    </ul>
+    <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+  </div>
+</nav>
+
+
+<nav th:fragment="dash-top-nav" class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+  <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+
+    <ul class="navbar-nav flex-nowrap ml-auto">
+      <div class="d-none d-sm-block topbar-divider"></div>
+      <li class="nav-item dropdown no-arrow">
+        <div class="nav-item dropdown no-arrow">
+          <a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">
+                                        <span class="d-none d-lg-inline mr-2 text-gray-600 small">
+                                          [[${authUser.name}]]
+                                        </span>
+            <img class="border rounded-circle img-profile" th:src="@{/assets/img/avatars/avatar1.jpeg}">
+          </a>
+          <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
+            <a class="dropdown-item" th:href="@{/dashboard/profile/} + ${authUser.id}">
+              <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+              &nbsp;Profile
+            </a>
+            <div class="dropdown-divider"></div>
+<!--            <a class="dropdown-item" th:href="@{/logout/} + ${authUser.id}">-->
+<!--              <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>-->
+<!--              &nbsp;Logout-->
+<!--            </a>-->
+            <form th:action="@{/logout}" method="post">
+              <input type="hidden" th:name="userId" th:value="${authUser.id}"/>
+              <button class="dropdown-item" type="submit">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+$END$
+</body>
+</html>

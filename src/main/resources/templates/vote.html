@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{dash_fragment :: dash-head}" />
+<body id="page-top">
+    <div id="wrapper">
+        <nav th:replace="~{dash_fragment :: dash-sidebar-nav}"></nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav th:replace="~{dash_fragment :: dash-top-nav}"></nav>
+                <div class="container-fluid" style="min-height: 620px">
+                    <h3 class="text-dark mb-4">
+                        <span th:text="${@pollTypeService.getPollTypeById(poll.pollTypeId).getName()}">Presidential Election</span>
+                    </h3>
+                    <div type="button" class="btn btn-success px-2">
+                        Winner: <span>Peter Anderson</span>
+                    </div>
+                    <hr>
+                    <div class="row gutters-sm">
+                        <div class="col-md-6 col-lg-3 mb-3" th:each="candidate : ${candidates}">
+                            <div class="card">
+                                <img class="card-img-top" th:src="@{/assets/img/Labour_Party_Nigeria_logo-2.png}" alt="Party Logo">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title"><span th:text="${candidate.name}">Peter Anderson</span></h5>
+                                    <small>of</small>
+                                    <p class="card-text">
+                                        <span th:text="${@partyService.getPartyById(candidate.partyId).acronym}">NNPC</span>
+                                    </p>
+                                </div>
+                                <hr class="m-0">
+                                <div class="d-flex justify-content-between p-2">
+                                    <form th:id="form + ${candidate.id}">
+                                        <input type="hidden" th:name="userId" th:value="${authUser.id}"/>
+                                        <input type="hidden" th:name="candidateId" th:value="${candidate.id}"/>
+                                        <input type="hidden" th:name="pollId" th:value="${poll.pollTypeId}"/>
+                                        <button type="submit" class="btn btn-info mt-3 btn-rounded waves-effect w-md waves-light">
+                                            Vote Now
+                                        </button>
+                                    </form>
+                                    <button type="button" class="btn btn-secondary mt-3 btn-rounded waves-effect w-md waves-light">
+                                        Votes <span class="badge badge-light" th:text="${candidate.voteCount}">433600</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="my-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <p>Content</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vote Success Modal -->
+            <div id="votedModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header d-flex">
+                            <div class="rounded-circle bg-success d-flex m-auto" style="width: 100px; height: 100px">
+                                <i class="fa fa-thumbs-up fa-3x text-white m-auto" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="modal-body text-center">
+                            <h4>Thank you for voting.</h4>
+                            <p>You can view vote results right on this page.</p>
+                            <p>The winner is dynamically annouced above.</p>
+                        </div>
+                        <div class="modal-footer d-flex">
+                            <button type="button" class="btn btn-success m-auto" data-dismiss="modal">
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirm Vote Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h4>
+                                Are you sure you want to vote for
+                                <strong class="text-primary"><span></span></strong>
+                            </h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="decline_vote" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button id="accept_vote" type="button" class="btn btn-primary">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © E-Voter 2023</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script type="text/javascript">
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var candidate = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            //modal.find('.modal-title').text('New message to ' + recipient)
+            modal.find('.modal-body h4 span').text(candidate)
+        })
+
+        $('#decline_vote').on('click', function(){
+            $('#exampleModal').modal('hide')
+        })
+
+        $('#accept_vote').on('click', function(){
+            $('#exampleModal').modal('hide')
+            $('#votedModal').modal('show')
+        })
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let form = $('form');
+
+            form.on('submit', function (e) {
+                e.preventDefault();
+                let formData = $(this).serializeArray();
+                console.log(formData);
+                let data = {
+                    "userId": formData[0].value,
+                    "candidateId": formData[1].value,
+                    "pollId": formData[2].value,
+                };
+                console.log(data);
+
+                $.ajax({
+                    contentType: "application/json",
+                    type: 'POST',
+                    url: '/votes/save',
+                    data: JSON.stringify(data),
+                    statusCode: {
+                        201: function() {
+                            $('#myModal').modal('show');
+                            $('form')[0].reset();
+                        },
+                        400: function() {
+                            $('#myFailModal').modal('show');
+                        },
+                        500: function() {
+                            $('#myFailModal').modal('show');
+                        },
+                        405: function() {
+                            $('#myFailModal').modal('show');
+                        }
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

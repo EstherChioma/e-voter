@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{dash_fragment :: dash-head}" />
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav th:replace="~{dash_fragment :: dash-sidebar-nav}"></nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav th:replace="~{dash_fragment :: dash-top-nav}"></nav>
+                <div class="container-fluid" style="min-height: 620px">
+                    <h3 class="text-dark mb-4">Available Polls</h3>
+                    <hr>
+                    <div class="row gutters-sm">
+                        <div class="col-md-6 col-xl-3 mb-4" th:each="poll : ${polls}">
+                            <!-- href to be removed later -->
+                              <a th:href="@{/dashboard/vote/} + ${authUser.id} + '/' + ${poll.id}" class="card shadow border-left-info py-2 text-decoration-none">
+                                  <div class="card-body">
+                                      <div class="row align-items-center no-gutters">
+                                          <div class="col mr-2">
+                                              <div class="text-uppercase text-info font-weight-bold text-xs mb-1">
+                                                    <span th:text="${@pollTypeService.getPollTypeById(poll.pollTypeId).getName()}">Presidential Election</span>
+                                              </div>
+                                              <div class="row no-gutters align-items-center">
+                                                  <div class="col-auto">
+                                                      <div class="text-dark h5 mb-0 mr-3">
+                                                          Candidates: <span th:text="${@candidateService.getCandidatesByPollTypeId(poll.pollTypeId).size()}">10</span>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © E-Voter 2023</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: outer_head}">
+
+<body class="bg-gradient-primary h-100" style="background: var(--info);">
+    <nav th:replace="~{fragments :: outer_nav}"></nav>
+    <div class="row justify-content-center">
+        <div class="col-md-8 pt-5">
+            <div class="px-2 pt-5 mt-5">
+                <div class="text-center">
+                    <h4 class="text-white mb-4" style="color: var(--white);text-align: center;">Welcome Back!</h4>
+                </div>
+                <form class="user" th:action="@{/login}" th:object="${userLoginDetails}" method="post">
+                    <div th:if="${param.error}">
+                        <div class="alert alert-danger" role="alert">
+                            Invalid username or password!
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control form-control-user" type="email" th:field="*{email}" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control form-control-user" type="password" th:field="*{password}" id="exampleInputPassword" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox small">
+                            <div class="form-check">
+                                <input class="form-check-input custom-control-input" type="checkbox" id="formCheck-1">
+                                <label class="form-check-label custom-control-label" for="formCheck-1" style="color: var(--white);">Remember Me</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block text-white btn-user" type="submit">
+                        Login
+                    </button>
+                    <hr>
+                </form>
+                <div class="text-center"><a class="small" th:href="@{/forgot-password}" style="color: var(--white);">Forgot Password?</a></div>
+                <div class="text-center"><a class="small" th:href="@{/register}" style="color: var(--white);">Create an Account!</a></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
